@@ -32,6 +32,13 @@ public class MergeSort {
     //arrTemp01 归并所需的辅助数组
     private static int[] arrTemp01;
 
+    public static void main(String[] args) {
+        int[] arr={8,9,1,7,2,3,5,4,6,0};
+        //decompose(arr, 0, 9);
+        sortMain(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+
     /**
      * mergeAndSort01方式的排序入口
      */
@@ -40,6 +47,28 @@ public class MergeSort {
         arrTemp01 = new int[arr.length];
         //从上往下，也就是先分解
         decompose(arr, 0, arr.length-1);
+    }
+
+    /**
+     * 自上而下的递归B：分解（2路归并排序）
+     */
+    public static void decompose(int[] arr, int left, int right){
+        //鲁棒性
+        if(arr==null || arr.length<=1){
+            return;
+        }
+        //递归结束点
+        if(left >= right){
+            return;
+        }
+
+        //2路递归分解
+        int mid = (left + right)/2;
+        decompose(arr, left, mid);
+        decompose(arr, mid+1, right);
+        //合并且排序
+        mergeAndSort01(arr, left, mid, right);
+        //mergeAndSort02(arr, left, mid, right);
     }
 
     /**
@@ -64,17 +93,6 @@ public class MergeSort {
 
         //边合并，边排序
         for(int k=start; k<=end; k++){
-            //以下注释代码是错误写法，判断的顺序不对，会导致数组越界异常
-//            if(arr[i] < arr[j]){
-//                arr[k] = arrTemp01[i++];
-//            }else if(arr[i] > arr[j]){
-//                arr[k] = arrTemp01[j++];
-//            }else if(i>mid){
-//                arr[k] = arrTemp01[j++];
-//            }else {
-//                arr[k] = arrTemp01[i++];
-//            }
-
             //以下四个判断顺序不要乱
             if(i > mid){ //i已经超出第1个待合并区间，则取第二个待合并区间
                 arr[k] = arrTemp01[j++];
@@ -126,34 +144,5 @@ public class MergeSort {
         for (int l = 0; l < k; l++) {
             arr[start+l] = arrTemp02[l];
         }
-    }
-
-    /**
-     * 自上而下的递归B：分解（2路归并排序）
-     */
-    public static void decompose(int[] arr, int left, int right){
-        //鲁棒性
-        if(arr==null || arr.length<=1){
-            return;
-        }
-        //递归结束点
-        if(left >= right){
-            return;
-        }
-
-        //2路递归分解
-        int mid = (left + right)/2;
-        decompose(arr, left, mid);
-        decompose(arr, mid+1, right);
-        //合并且排序
-        mergeAndSort01(arr, left, mid, right);
-        //mergeAndSort02(arr, left, mid, right);
-    }
-
-    public static void main(String[] args) {
-        int[] arr={8,9,1,7,2,3,5,4,6,0};
-        //decompose(arr, 0, 9);
-        sortMain(arr);
-        System.out.println(Arrays.toString(arr));
     }
 }
